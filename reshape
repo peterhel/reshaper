@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PERCENTAGE=${1:-25}
+
 which mapshaper > /dev/null || npm install -g mapshaper
 
 DEST=`pwd`
@@ -7,15 +9,26 @@ cd /tmp
 
 URL="http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip"
 FILE="${URL##*/}"
-curl -sLOk "${URL}" -o ${FILE}
-unzip -o $FILE
 
+if ! [ -f "$FILE" ]
+then
+    curl -LOk "${URL}" -o ${FILE}
+fi
+
+unzip -o $FILE > /dev/null
 SHAPE=$(ls *.shp)
-echo $SHAPE
-mapshaper -i "${SHAPE}" -simplify 25% -o
+
+bash <<EOF
+set -x; mapshaper -i "${SHAPE}" -simplify ${PERCENTAGE}% -o 2> /dev/null
+EOF
+
 $DEST/shp2json "${SHAPE}"
 
 $DEST/cleangeojson
 
 rm out.json
 mv *.json $DEST
+
+cd $DEST
+
+find -name '*.json' -exec du -h {} \;
