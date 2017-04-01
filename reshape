@@ -10,13 +10,12 @@ cd /tmp
 URL="http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip"
 FILE="${URL##*/}"
 
-if ! [ -f "$FILE" ]
-then
+# if ! [ -f "$FILE" ]
+# then
     curl -LOk "${URL}" -o ${FILE}
-fi
+# fi
 
-unzip -o $FILE > /dev/null
-SHAPE=$(ls *.shp)
+SHAPE=$(unzip -lq $FILE | grep -oP '\w+\.shp*$')
 
 bash <<EOF
 set -x; mapshaper -i "${SHAPE}" -simplify ${PERCENTAGE}% -o 2> /dev/null
