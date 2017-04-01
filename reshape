@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
+which mapshaper > /dev/null || npm install -g mapshaper
+
 DEST=`pwd`
 cd /tmp
 
 URL="http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip"
 FILE="${URL##*/}"
 curl -sLOk "${URL}" -o ${FILE}
-unzip $FILE
+unzip -o $FILE
 
 SHAPE=$(ls *.shp)
 echo $SHAPE
 mapshaper -i "${SHAPE}" -simplify 25% -o
-shp2json "${SHAPE}"
+$DEST/shp2json "${SHAPE}"
 
-cleangeojson
+$DEST/cleangeojson
 
 rm out.json
 mv *.json $DEST
