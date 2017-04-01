@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const json = require(path.resolve(process.cwd(), 'out.json'));
+
+const features = {};
+const coordinates = {};
+
+function dafuck(coordinates) {
+    let depth = 0;
+    let thisDepth;
+    function _dafuck(_coordinates) {
+        depth++;
+        if(!_coordinates) {
+            return;
+        }
+        if(_coordinates.length === 1) {
+            return _dafuck(_coordinates[0]);
+        }
+        if(_coordinates.length === 2 && !(_coordinates[0] instanceof Array) ) {
+            !thisDepth && (thisDepth = depth);
+            depth = 0;
+            return {
+                lng: _coordinates[0],
+                lat: _coordinates[1]
+            }
+        }
+        return _coordinates.map(x => _dafuck(x))
+    }
+    const value = _dafuck(coordinates);
+    console.log(thisDepth)
+    return thisDepth === 3 ? [value] : value;
+}
+
+json.features.forEach(x => {
+    const regionid = x.properties.SUBREGION.match(/\w/g).join('').toLowerCase();
+    let region = features[regionid];
+    if(!region) {
+        features[regionid] = {
+            name: x.properties.SUBREGION,
+            regions: {}
+        };
+        region = features[regionid];
+    }
+
+    const subregionid = x.properties.NAME_LONG.match(/\w/g).join('').toLowerCase();
+
+    region.regions[subregionid] = {
+        name: x.properties.NAME_LONG,
+        coordinates: dafuck(x.geometry && x.geometry.coordinates || []),
+    };
+    
+    coordinates[subregionid] = {
+        name: x.properties.NAME_LONG,
+        coordinates: dafuck(x.geometry && x.geometry.coordinates || []),
+    };
+
+});
+
+require('fs').writeFileSync('features.json', JSON.stringify(features, null, 2), 'utf8')
+require('fs').writeFileSync('coordinates.json', JSON.stringify(coordinates, null, 2), 'utf8')
+
