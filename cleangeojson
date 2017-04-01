@@ -28,7 +28,6 @@ function dafuck(coordinates) {
         return _coordinates.map(x => _dafuck(x))
     }
     const value = _dafuck(coordinates);
-    console.log(thisDepth)
     return thisDepth === 3 ? [value] : value;
 }
 

@@ -4,5 +4,7 @@ RUN npm install -g mapshaper
 ADD ./reshape /bin/reshape
 ADD ./shp2json /bin/shp2json
 ADD ./cleangeojson /bin/cleangeojson
+ADD ./boot /bin/boot
+ADD ./run /opt/run
 
-CMD reshape
+CMD boot
