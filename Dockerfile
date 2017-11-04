@@ -1,4 +1,4 @@
-FROM node:7.6.0
+FROM node:8
 RUN apt update && apt install unzip python-pyshp -y
 RUN npm install -g mapshaper
 ADD ./reshape /bin/reshape

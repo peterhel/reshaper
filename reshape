@@ -18,10 +18,11 @@ FILE="${URL##*/}"
     curl -LOk "${URL}" -o ${FILE}
 # fi
 
+unzip $FILE
 SHAPE=$(unzip -lq $FILE | grep -oP '\w+\.shp*$')
 
 bash <<EOF
-set -x; mapshaper -i "${SHAPE}" -simplify ${PERCENTAGE}% -o 2> /dev/null
+set -x; mapshaper -i "${SHAPE}" -simplify ${PERCENTAGE}% -o force # 2> /dev/null
 EOF
 
 $DEST/shp2json "${SHAPE}"
