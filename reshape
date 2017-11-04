@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+set -x
+set -e
+
 PERCENTAGE=${1:-25}
 
 which mapshaper > /dev/null || npm install -g mapshaper
