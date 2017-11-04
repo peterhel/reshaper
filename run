@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
+# cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
 
-#docker run --user `id -u` -v `pwd`:`pwd` -w `pwd` `docker build -q .`
+docker run -it --user `id -u` -v `pwd`:`pwd` -w `pwd` `docker build -q .` /bin/bash
 
