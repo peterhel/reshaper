@@ -1,6 +1,15 @@
 FROM node:8
-RUN apt update && apt install unzip python-pyshp -y
+RUN apt update && apt install unzip python-pyshp wget -y
 RUN npm install -g mapshaper
+
+USER 1000
+
+WORKDIR /tmp
+ENV FILE ne_10m_admin_1_states_provinces
+RUN wget "http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/${FILE}.zip"
+ENV SHAPE "${FILE}.shp"
+RUN unzip "${FILE}.zip"
+
 ADD ./reshape /bin/reshape
 ADD ./shp2json /bin/shp2json
 ADD ./cleangeojson /bin/cleangeojson

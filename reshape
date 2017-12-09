@@ -5,21 +5,8 @@ set -e
 
 PERCENTAGE=${1:-25}
 
-which mapshaper > /dev/null || npm install -g mapshaper
-
 DEST=`pwd`
 cd /tmp
-
-URL="http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_0_countries.zip"
-FILE="${URL##*/}"
-
-# if ! [ -f "$FILE" ]
-# then
-    curl -LOk "${URL}" -o ${FILE}
-# fi
-
-unzip $FILE
-SHAPE=$(unzip -lq $FILE | grep -oP '\w+\.shp*$')
 
 bash <<EOF
 set -x; mapshaper -i "${SHAPE}" -simplify ${PERCENTAGE}% -o force # 2> /dev/null
@@ -27,9 +14,9 @@ EOF
 
 $DEST/shp2json "${SHAPE}"
 
-$DEST/cleangeojson
+# $DEST/cleangeojson
 
-rm out.json
+# rm out.json
 mv *.json $DEST
 
 cd $DEST
