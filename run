@@ -3,4 +3,4 @@
 # cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
 
 docker run -it -v `pwd`:`pwd` -w `pwd` `docker build -f Dockerfile.$1 -q .` reshape $2
-
+sudo chown $(whoami) *.json
