@@ -14,9 +14,7 @@ EOF
 
 $DEST/shp2json "${SHAPE}"
 
-# $DEST/cleangeojson
-
-# rm out.json
+mv out.json ${FILE}.json
 mv *.json $DEST
 
 cd $DEST
