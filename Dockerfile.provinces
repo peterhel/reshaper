@@ -2,7 +2,7 @@ FROM node:8
 RUN apt update && apt install unzip python-pyshp wget -y
 RUN npm install -g mapshaper
 
-USER 1000
+# USER 1000
 
 WORKDIR /tmp
 ENV FILE ne_10m_admin_1_states_provinces
